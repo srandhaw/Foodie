@@ -3,10 +3,12 @@ package edu.purdue.srandhaw.foodie;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cameraButton = (ImageButton) findViewById(R.id.camera);
         listView = (ListView) findViewById(R.id.listfood);
         searchButton.setOnClickListener(this);
+        searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
 
 
         customAdapter = new CustomAdapter(MainActivity.this, R.layout.custom_foodlistrow, foodItems);
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonsearch: {
                 if (searchBar.getText() != null) {
                     foodItems.add(searchBar.getText().toString());
+                    searchBar.setText("");
+                    searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
                 }
             }
             break;
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             byteArray = stream.toByteArray();
 
             new JSONTask().execute("http://overlyliteral.com/projects/testFoodiePOST.php");
-            
+
         }
     }
 
@@ -147,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public class JSONTask extends AsyncTask<String, String, String> {
 
 
-
         @Override
 
 
@@ -180,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     String response = bufferedReader.readLine();
 
-                    System.out.println(response);
+                    //System.out.println(response);
                     return response;
 
                 } catch (Exception e) {
@@ -211,7 +215,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+            String JSON_String = result;
+            String JSON_String1 = JSON_String.substring(JSON_String.indexOf("description"));
+            String JSON_String2 = JSON_String1.substring(JSON_String1.indexOf("\":"));
+            String JSON_String3 = JSON_String2.substring(JSON_String2.indexOf(" "));
+            String JSON_String4 = JSON_String3.substring(JSON_String3.indexOf("\""), JSON_String3.indexOf(","));
+            String JSON_String5 = JSON_String4.replace("\"", "");
+            foodItems.add(JSON_String5);
+            searchBar.setText("");
+            searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
+            //Toast.makeText(getApplicationContext(),JSON_String5,Toast.LENGTH_LONG).show();
         }
     }
+
+
 }
