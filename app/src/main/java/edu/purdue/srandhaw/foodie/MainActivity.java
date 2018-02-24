@@ -19,10 +19,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.zip.CheckedInputStream;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
  EditText searchBar;
@@ -132,10 +141,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) throws NullPointerException {
         if (requestCode == CAM) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             // now we can access the photo using bitmap -> photo
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            try {
+                Base64.Encoder encoder = Base64.getEncoder();
+                String encoded = "somerequest=" + encoder.encodeToString(byteArray);
+                // System.out.println(encoded);
+
+                URL url = new URL("http://overlyliteral.com/projects/testFoodiePOST.php");
+
+                HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
+                httpsURLConnection.setRequestMethod("POST");
+
+                httpsURLConnection.setDoOutput(true);
+
+                String JSON = encoded;
+
+                DataOutputStream dataOutputStream = new DataOutputStream(httpsURLConnection.getOutputStream());
+
+                dataOutputStream.writeBytes(JSON);
+                dataOutputStream.flush();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+
+                String response = bufferedReader.readLine();
+
+                System.out.println(response);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
