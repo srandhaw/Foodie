@@ -187,10 +187,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
 
-                    String response = bufferedReader.readLine();
+                    StringBuilder response = new StringBuilder();
+                    String currentResponse;
+
+                    while ((currentResponse = bufferedReader.readLine()) != null) {
+                        response.append(currentResponse);
+                    }
 
                     //System.out.println(response);
-                    return response;
+                    return response.toString();
 
                 } catch (Exception e) {
                     e.printStackTrace();
