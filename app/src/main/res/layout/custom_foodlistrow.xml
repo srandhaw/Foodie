@@ -13,7 +13,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginStart="5dp"
-        android:background="#d2adad"
+        android:background="#B3B6B7"
         android:orientation="horizontal">
 
         <TextView
@@ -22,7 +22,10 @@
             android:layout_height="35dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/exo_black"
+            android:text="hey"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/button"
@@ -31,7 +34,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:background="#890a3e"
+            android:background="#7B7D7D"
             android:text="Info"
             android:textColor="#ffffff" />
 
@@ -41,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="5dp"
-            android:background="#d2adad"
+            android:background="#B3B6B7"
             app:srcCompat="@android:drawable/ic_delete" />
 
     </LinearLayout>
