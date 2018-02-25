@@ -29,10 +29,11 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".Pop"
-            android:theme="@style/AppTheme.CustomTheme">
-
-        </activity>
+        <activity
+            android:name=".Pop"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".RecipeActivity" />
+        <activity android:name=".WebViewActivity"></activity>
     </application>
 
 </manifest>

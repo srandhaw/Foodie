@@ -29,20 +29,17 @@ public class Pop extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.tvTitle);
         final EditText et = (EditText) findViewById(R.id.etAlternative);
         ImageButton ib = (ImageButton) findViewById(R.id.btnplus);
-        final ArrayList<String> description= new ArrayList<String>();
-        int descriptionCounter=0;
+        final ArrayList<String> description = new ArrayList<String>();
+        int descriptionCounter = 0;
         String response = getIntent().getStringExtra("Key");
-        final int index = getIntent().getIntExtra("index",0);
+        final int index = getIntent().getIntExtra("index", 0);
+        final ArrayList<String> dJSONArray = getIntent().getStringArrayListExtra("Array");
 
         try {
-            JSONObject parentObject = new JSONObject(response);
+            JSONObject parentObject = new JSONObject(dJSONArray.get(index));
             JSONArray parentArray = parentObject.getJSONArray("responses");
             JSONObject childObject = parentArray.getJSONObject(0);
             JSONArray childArray = childObject.getJSONArray("labelAnnotations");
-
-
-
-
 
 
             for (int i = 0; i < childArray.length(); i++) {
@@ -54,32 +51,32 @@ public class Pop extends AppCompatActivity {
             e.printStackTrace();
         }
         ListView lv = (ListView) findViewById(R.id.lvAlternatives);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, description);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, description);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            finale = description.get(i);
+                finale = description.get(i);
 
-                MainActivity.foodItems.set(index,finale);
-
+                MainActivity.foodItems.set(index, finale);
+                System.out.println(dJSONArray);
                 MainActivity.customAdapter.notifyDataSetChanged();
-                Intent intent = new Intent(Pop.this,MainActivity.class);
+                Intent intent = new Intent(Pop.this, MainActivity.class);
                 startActivity(intent);
 
             }
         });
 
         ib.setOnClickListener(new View.OnClickListener() {
-            @Override
+
             public void onClick(View view) {
                 finale = et.getText().toString();
                 et.setText("");
-
-                    MainActivity.foodItems.set(index,finale);
+                System.out.println(dJSONArray);
+                MainActivity.foodItems.set(index, finale);
                 MainActivity.customAdapter.notifyDataSetChanged();
-Intent intent = new Intent(Pop.this,MainActivity.class);
-startActivity(intent);
+                Intent intent = new Intent(Pop.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 

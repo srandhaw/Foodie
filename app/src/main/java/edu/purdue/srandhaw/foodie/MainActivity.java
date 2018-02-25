@@ -43,11 +43,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton cameraButton;
     ImageView iv;
     ListView listView;
+    Button btgo;
     int searchCounter = 0;
    static ArrayList<String> foodItems = new ArrayList<String>();
     static CustomAdapter customAdapter = null;
 
     byte[] byteArray;
+    ArrayList<String> JSONArray = new ArrayList<>();
 
     String final_JSONString="";
     @Override
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchButton = (Button) findViewById(R.id.buttonsearch);
         cameraButton = (ImageButton) findViewById(R.id.camera);
         listView = (ListView) findViewById(R.id.listfood);
+        btgo = (Button) findViewById(R.id.btgo);
+        btgo.setOnClickListener(this);
         searchButton.setOnClickListener(this);
         searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
 
@@ -93,19 +97,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
 
             case R.id.btgo: {
-                URL urlRecipe = new URL("http://food2fork.com/api/search?key=fc99fad477a16a16e574c69eed41db44&q=Chicken,beef");
-                HttpURLConnection httpURLConnection = (HttpURLConnection) urlRecipe.openConnection();
+                System.out.println(" go works");
+Intent intent = new Intent(MainActivity.this,RecipeActivity.class);
+intent.putExtra("foodArray",foodItems);
+startActivity(intent);
 
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.addRequestProperty("User-Agent", "Mozilla/4.76");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String currentResponse;
 
-                while ((currentResponse = bufferedReader.readLine()) != null) {
-                    response.append(currentResponse);
-                }
             }
             break;
 
@@ -168,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      Intent intent=new Intent(MainActivity.this,Pop.class);
                      intent.putExtra("Key",final_JSONString);
                      intent.putExtra("index",foodItems.size()-1);
+                     intent.putExtra("Array",JSONArray);
                      startActivity(intent);
                    //  temp.set(position,Pop.finale);
                 //    customAdapter.notifyDataSetChanged();
@@ -229,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         response.append(currentResponse);
                     }
 final_JSONString=response.toString();
+                    JSONArray.add(final_JSONString);
                     //System.out.println(response);
                     return response.toString();
 
