@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView iv;
     ListView listView;
     int searchCounter = 0;
-    ArrayList<String> foodItems = new ArrayList<String>();
-    CustomAdapter customAdapter = null;
+   static ArrayList<String> foodItems = new ArrayList<String>();
+    static CustomAdapter customAdapter = null;
 
     byte[] byteArray;
 
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAM);
+
             }
         });
     }
@@ -80,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             case R.id.buttonsearch: {
+
                 if (searchBar.getText() != null) {
+
                     foodItems.add(searchBar.getText().toString());
                     searchBar.setText("");
                     searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
@@ -152,9 +155,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(View view) {
                      Intent intent=new Intent(MainActivity.this,Pop.class);
                      intent.putExtra("Key",final_JSONString);
+                     intent.putExtra("index",foodItems.size()-1);
                      startActivity(intent);
-                     temp.set(position,Pop.finale);
-                    customAdapter.notifyDataSetChanged();
+                   //  temp.set(position,Pop.finale);
+                //    customAdapter.notifyDataSetChanged();
+
                 }
 
 
@@ -253,6 +258,7 @@ final_JSONString=response.toString();
             searchBar.setText("");
             searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
             customAdapter.notifyDataSetChanged();
+
             //Toast.makeText(getApplicationContext(),JSON_String5,Toast.LENGTH_LONG).show();
         }
     }

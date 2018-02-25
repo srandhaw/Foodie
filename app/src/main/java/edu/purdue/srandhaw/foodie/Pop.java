@@ -1,5 +1,6 @@
 package edu.purdue.srandhaw.foodie;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -31,12 +32,14 @@ public class Pop extends AppCompatActivity {
         final ArrayList<String> description= new ArrayList<String>();
         int descriptionCounter=0;
         String response = getIntent().getStringExtra("Key");
+        final int index = getIntent().getIntExtra("index",0);
+
         try {
             JSONObject parentObject = new JSONObject(response);
             JSONArray parentArray = parentObject.getJSONArray("responses");
             JSONObject childObject = parentArray.getJSONObject(0);
             JSONArray childArray = childObject.getJSONArray("labelAnnotations");
-            System.out.println(childArray.length());
+
 
 
 
@@ -50,7 +53,6 @@ public class Pop extends AppCompatActivity {
             System.out.println("Description counter: " + descriptionCounter);
             e.printStackTrace();
         }
-        System.out.println( description.get(1));
         ListView lv = (ListView) findViewById(R.id.lvAlternatives);
         ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, description);
         lv.setAdapter(adapter);
@@ -58,6 +60,12 @@ public class Pop extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             finale = description.get(i);
+
+                MainActivity.foodItems.set(index,finale);
+
+                MainActivity.customAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(Pop.this,MainActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -68,6 +76,10 @@ public class Pop extends AppCompatActivity {
                 finale = et.getText().toString();
                 et.setText("");
 
+                    MainActivity.foodItems.set(index,finale);
+                MainActivity.customAdapter.notifyDataSetChanged();
+Intent intent = new Intent(Pop.this,MainActivity.class);
+startActivity(intent);
             }
         });
 
