@@ -29,7 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
+import android.util.Base64;
 import java.util.Date;
 import java.util.zip.CheckedInputStream;
 
@@ -150,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             byte[] byteArray = stream.toByteArray();
 
             try {
-                Base64.Encoder encoder = Base64.getEncoder();
-                String encoded = "somerequest=" + encoder.encodeToString(byteArray);
+//                Base64.Encoder encoder = Base64.getEncoder();
+                String encoded = "somerequest=" + Base64.encodeToString(byteArray,Base64.DEFAULT);
                 // System.out.println(encoded);
 
                 URL url = new URL("http://overlyliteral.com/projects/testFoodiePOST.php");
