@@ -1,5 +1,6 @@
 package edu.purdue.srandhaw.foodie;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,7 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import android.util.Base64;
+import java.util.Base64;
 import java.util.Date;
 import java.util.zip.CheckedInputStream;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     byte[] byteArray;
 
+    String final_JSONString="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     foodItems.add(searchBar.getText().toString());
                     searchBar.setText("");
                     searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
+                    customAdapter.notifyDataSetChanged();
                 }
             }
             break;
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    class CustomAdapter extends ArrayAdapter<String> {
+    public class CustomAdapter extends ArrayAdapter<String> {
         TextView txtView;
         ArrayList<String> temp;
 
@@ -129,9 +132,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate(R.layout.custom_foodlistrow, parent, false);
+            final View view = getLayoutInflater().inflate(R.layout.custom_foodlistrow, parent, false);
 
-            Button btn = (Button) view.findViewById(R.id.button);
+            Button infobtn = (Button) view.findViewById(R.id.button);
             txtView = (TextView) view.findViewById(R.id.textView);
             ImageButton ib = (ImageButton) view.findViewById(R.id.imageButton);
             txtView.setText(foodItems.get(position));
@@ -143,6 +146,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     customAdapter.notifyDataSetChanged();
                 }
             });
+            infobtn.setOnClickListener(new View.OnClickListener() {
+                Dialog myDialog;
+                @Override
+                public void onClick(View view) {
+                     Intent intent=new Intent(MainActivity.this,Pop.class);
+                     intent.putExtra("Key",final_JSONString);
+                     startActivity(intent);
+                     temp.set(position,Pop.finale);
+                    customAdapter.notifyDataSetChanged();
+                }
+
+
+            });
+
+
 
 
             return view;
@@ -161,14 +179,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             HttpURLConnection connection = null;
             BufferedReader bfr = null;
             try {
-//                Base64.Encoder encoder = Base64.getEncoder();
-                String encoded = "somerequest=" + Base64.encodeToString(byteArray,Base64.DEFAULT);
-                // System.out.println(encoded);
-                URL url = new URL(strings[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream stream = connection.getInputStream();
-                bfr = new BufferedReader(new InputStreamReader(stream));
+////                Base64.Encoder encoder = Base64.getEncoder();
+//                String encoded = "somerequest=" + Base64.encodeToString(byteArray,Base64.DEFAULT);
+//                // System.out.println(encoded);
+              URL url = new URL(strings[0]);
+       //     connection = (HttpURLConnection) url.openConnection();
+//               connection.connect();
+//              InputStream stream = connection.getInputStream();
+//                bfr = new BufferedReader(new InputStreamReader(stream));
                 try {
                     Base64.Encoder encoder = Base64.getEncoder();
                     String encoded = "somerequest=" + encoder.encodeToString(byteArray);
@@ -178,22 +196,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     httpsURLConnection.setDoOutput(true);
 
-                    String JSON = encoded;
+//                    String JSON = encoded;
 
                     DataOutputStream dataOutputStream = new DataOutputStream(httpsURLConnection.getOutputStream());
 
-                    dataOutputStream.writeBytes(JSON);
+                    dataOutputStream.writeBytes(encoded);
                     dataOutputStream.flush();
 
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
 
                     StringBuilder response = new StringBuilder();
-                    String currentResponse;
 
+                    String currentResponse ;
                     while ((currentResponse = bufferedReader.readLine()) != null) {
                         response.append(currentResponse);
                     }
-
+final_JSONString=response.toString();
                     //System.out.println(response);
                     return response.toString();
 
@@ -234,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             foodItems.add(JSON_String5);
             searchBar.setText("");
             searchBar.setHint("ENTER OR CAPTURE INGREDIENT " + (foodItems.size() + 1));
+            customAdapter.notifyDataSetChanged();
             //Toast.makeText(getApplicationContext(),JSON_String5,Toast.LENGTH_LONG).show();
         }
     }
