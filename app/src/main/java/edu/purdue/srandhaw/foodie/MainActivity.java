@@ -90,7 +90,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
 
             case R.id.btgo: {
+                URL urlRecipe = new URL("http://food2fork.com/api/search?key=fc99fad477a16a16e574c69eed41db44&q=Chicken,beef");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) urlRecipe.openConnection();
 
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.addRequestProperty("User-Agent", "Mozilla/4.76");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String currentResponse;
+
+                while ((currentResponse = bufferedReader.readLine()) != null) {
+                    response.append(currentResponse);
+                }
             }
             break;
 
